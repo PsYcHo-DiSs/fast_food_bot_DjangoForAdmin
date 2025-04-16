@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  bot:
+    build:
+      context: ./bot
+    container_name: fast_food_DjangoForAdmin_bot_app
+    restart: always
+    env_file:
+      - ./bot/.env
+    volumes:
+      - ./media:/app/media
+    depends_on:
+      - db
+    networks:
+      - fast_food_bot_DjangoForAdmin-network
+
+  management:
+    build:
+      context: ./management
+    container_name: django_admin_for_fast_food_bot_app
+    restart: always
+    env_file:
+      - ./management/.env
+    volumes:
+      - ./media:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - fast_food_bot_DjangoForAdmin-network
+
+  db:
+    image: postgres:15
+    container_name: db_fast_food_DjangoForAdmin
+    restart: always
+    env_file:
+      - ./db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fast_food_bot_DjangoForAdmin-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fast_food_bot_DjangoForAdmin-network:
+    driver: bridge

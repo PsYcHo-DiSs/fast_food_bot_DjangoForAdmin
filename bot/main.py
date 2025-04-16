@@ -1,5 +1,4 @@
 import asyncio
-import os
 from os import getenv
 
 from aiogram.client.bot import DefaultBotProperties
@@ -129,7 +128,7 @@ async def show_product_detail(callback: CallbackQuery):
                                reply_markup=back_arrow_button())
 
         await bot.send_photo(chat_id=chat_id,
-                             photo=FSInputFile(path=product.image),
+                             photo=FSInputFile(path=f'{MEDIA_FOLDER}{product.image}'),
                              caption=text,
                              reply_markup=generate_constructor_button())
     else:
@@ -242,7 +241,7 @@ async def show_total_goods_list(callback: CallbackQuery, editor=False):
         if count:
             # если корзина НЕ пуста
             await bot.send_photo(chat_id=chat_id,
-                                 photo=FSInputFile(path=f"{MEDIA_FOLDER}/final_cart_img.jpg"),
+                                 photo=FSInputFile(path=f"{MEDIA_FOLDER}final_cart_img.jpg"),
                                  caption=text,
                                  reply_markup=generate_pay_edit_product(chat_id))
         else:

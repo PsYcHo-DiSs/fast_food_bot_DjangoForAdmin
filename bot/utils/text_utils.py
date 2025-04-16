@@ -1,6 +1,5 @@
-from sqlalchemy import DECIMAL, ScalarResult
+from sqlalchemy import DECIMAL
 
-from database.models import FinalCarts
 from database.db_utills import db_get_final_carts_by_chat_id
 
 
