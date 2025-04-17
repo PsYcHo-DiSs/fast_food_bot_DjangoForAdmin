@@ -128,7 +128,7 @@ async def show_product_detail(callback: CallbackQuery):
                                reply_markup=back_arrow_button())
 
         await bot.send_photo(chat_id=chat_id,
-                             photo=FSInputFile(path=f'{MEDIA_FOLDER}{product.image}'),
+                             photo=FSInputFile(path=f'media/{product.image}'),
                              caption=text,
                              reply_markup=generate_constructor_button())
     else:

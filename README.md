@@ -1,70 +1,140 @@
 # fast_food_bot_DjangoForAdmin
-Telegram bot for fast food orders. Plus django admin as db editor.
+
+Telegram-бот для оформления заказов фастфуда + админка на Django для управления контентом. Использует PostgreSQL и Docker Compose.
 
 
-## ENG
-### To run the bot functional using Docker ecosystem:
+```
+fast_food_bot_DjangoForAdmin/
+├── bot/                      <-- Aiogram-бот
+│   ├── database/
+│   ├── keyboards/
+│   ├── utils/
+│   ├── main.py
+│   ├── .env.example          <-- переменные для bot
+│   ├── Dockerfile
+│   └── entrypoint.sh
+├── management/               <-- Django-админка
+│   ├── conf/
+│   ├── web_admin/
+│   ├── manage.py
+│   ├── .env.example          <-- переменные для management
+│   ├── Dockerfile
+│   └── entrypoint.sh
+├── media/                    <-- общая папка для изображений
+├── db.env.example            <-- переменные для PostgreSQL
+└── docker-compose.yml
+```
 
-1. **Create a Docker network on the server** by running:
-   ```bash
-   docker network create fastfood-net
-   ```
-   
-2. **Launch the PostgreSQL database container** (specify the Docker network created above):
-   ```bash
-   docker run --name db_server_fast_food_bot    --network fastfood-net    -e POSTGRES_PASSWORD=<...your...password...>    -d --restart unless-stopped    postgres
-   ```
+## 🚀 Бысткий старт (Docker Compose)
 
-3. **Clone the repository** to your local machine.
+### 1. 📥 Клонируйте репозиторий
 
-4. **Create your `.env` file** based on the `.env.example` file from the project.
+```bash
+git clone https://github.com/your_username/fast_food_bot_DjangoForAdmin.git
+cd fast_food_bot_DjangoForAdmin
+```
 
-5. **Since both containers will be in the same Docker network, you can refer to the database container by its name:**
-   ```
-   DB_ADDRESS=db_server_fast_food_bot (this matches the name of the PostgreSQL container above)
-   ```
+### 2. 📝 Создайте `.env` файлы
 
-6. **Build the Docker image**:
-   ```bash
-   docker build -t fastfoodbot ~/fast_food_bot/
-   ```
+Создайте `.env` файлы на основе примерных:
 
-7. **Launch the container based on the image created above** (it will be connected to the shared Docker network):
-   ```bash
-   docker run --name fast_food_bot    --network fastfood-net    -d --restart unless-stopped    fastfoodbot
-   ```
+```bash
+cp bot/.env.example bot/.env
+cp management/.env.example management/.env
+cp db.env.example db.env
+```
 
-8. **Both containers will start automatically**. The `./database/models.py` file will be executed under the hood, which initializes the database with test data (only the `lavaš` and `donar` categories are populated).
+Отредактируйте поля `TOKEN`, `CLICK_PAYMENT_TOKEN`, `SECRET_KEY` и т.д., подставив свои значения.
 
+### 3. 📦 Запустите проект
 
-## RU
+```bash
+docker-compose up --build
+```
 
-Для того, чтобы запустить функционал бота, используя Docker экосистему:
-1. Создаём докер сеть на сервере, командой -> `docker network create fastfood-net`
-2. Запускаем контейнер базы данных postgres (указываем общую докер сеть, созданную выше) ->
-    ```
-    docker run --name db_server_fast_food_bot \
-    --network fastfood-net \
-    -e POSTGRES_PASSWORD=<...your...password...> \
-    -d --restart unless-stopped \
-    postgres
-    ```
-3. Клонируем репозиторий к себе.
-3. Создаём свой файл `.env` на основе файла `.env.example` из проекта.
-4. Благодаря последующему нахождению двух контейнеров в одной докер сети, адресом базы данных можно указывать имя контейнера:
-   
-    ```
-    DB_ADDRESS=db_server_fast_food_bot (совпадает с именем контейнера бызы postgres выше)
-    ```
-6. Билдим образ docker ->
-   ```
-   docker build -t fastfoodbot ~/fast_food_bot/
-   ```
-7. Запускаем контейнер на основе выше созданного образа (помещается в общую докер сеть) ->
-   ```
-   docker run --name fast_food_bot \
-    --network fastfood-net \
-    -d --restart unless-stopped \
-    fastfoodbot
-   ```
-8. Оба контейнера запускаются автоматически, под капотом происходит инициализация файлика `./database/models.py` в котором база заполняется тестовыми данными (заполнены только сегменты из категорий `лаваш` и `донары`). 
+Это поднимет три контейнера:
+
+- `fast_food_bot` — телеграм-бот
+- `fast_food_admin` — админка на Django (http://localhost:8000)
+- `fast_food_db` — PostgreSQL база данных
+
+### 4. 🖼 Загрузка изображений
+
+Все изображения загружаются через админку в `media/`, которая автоматически синхронизируется между ботом и Django.
+
+---
+
+## 🌍 Project Structure
+
+```
+Docker Bridge Network (fast_food-network)
+ ┌──────────────┬───────────────┬────────────────────┐
+ │     bot      │  management   │        db          │
+ │  (Aiogram)   │   (Django)    │   (PostgreSQL 15)  │
+ │  .env        │   .env        │     db.env         │
+ │  /app/media  │  /app/media   │                    │
+ └────┬─────────┴────┬──────────┴────────────┬───────┘
+      │              │                      │
+      │              ▼                      │
+     ./media (на хосте, общая папка для изображений)
+```
+
+---
+
+## 🇬🇧 English
+
+### 🚀 Quick Start (Docker Compose)
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/your_username/fast_food_bot_DjangoForAdmin.git
+cd fast_food_bot_DjangoForAdmin
+```
+
+2. **Create `.env` files from examples**
+
+```bash
+cp bot/.env.example bot/.env
+cp management/.env.example management/.env
+cp db.env.example db.env
+```
+
+3. **Edit your `.env` files**
+
+Fill in your own:
+
+- Telegram bot token
+- Django secret key
+- Payment token (optional)
+- Group ID for manager notifications
+
+4. **Launch the whole system**
+
+```bash
+docker-compose up --build
+```
+
+Visit the Django admin panel at: http://localhost:8000
+
+Images uploaded in the admin panel will be available to the bot via the shared `/media/` directory.
+
+---
+
+### ✅ Requirements
+
+- Docker
+- Docker Compose
+- Telegram Bot Token (get via @BotFather)
+
+---
+
+## ✅ ToDo / Coming soon
+
+- Webhook deployment support
+- Admin panel translation
+- QR-code based order tracking
+
+---
+
+### 🔥 Enjoy & contribute!

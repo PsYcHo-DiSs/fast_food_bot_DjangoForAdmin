@@ -4,7 +4,7 @@ services:
   bot:
     build:
       context: ./bot
-    container_name: fast_food_DjangoForAdmin_bot_app
+    container_name: fast_food_bot
     restart: always
     env_file:
       - ./bot/.env
@@ -13,12 +13,12 @@ services:
     depends_on:
       - db
     networks:
-      - fast_food_bot_DjangoForAdmin-network
+      - fast_food-network
 
   management:
     build:
       context: ./management
-    container_name: django_admin_for_fast_food_bot_app
+    container_name: fast_food_admin
     restart: always
     env_file:
       - ./management/.env
@@ -29,22 +29,24 @@ services:
     depends_on:
       - db
     networks:
-      - fast_food_bot_DjangoForAdmin-network
+      - fast_food-network
 
   db:
     image: postgres:15
-    container_name: db_fast_food_DjangoForAdmin
+    container_name: fast_food_db
     restart: always
     env_file:
       - ./db.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"
     networks:
-      - fast_food_bot_DjangoForAdmin-network
+      - fast_food-network
 
 volumes:
   postgres_data:
 
 networks:
-  fast_food_bot_DjangoForAdmin-network:
+  fast_food-network:
     driver: bridge
