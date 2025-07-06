@@ -30,7 +30,7 @@ fast_food_bot_DjangoForAdmin/
 ### 1. 📥 Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/your_username/fast_food_bot_DjangoForAdmin.git
+git clone https://github.com/PsYcHo-DiSs/fast_food_bot_DjangoForAdmin.git
 cd fast_food_bot_DjangoForAdmin
 ```
 
